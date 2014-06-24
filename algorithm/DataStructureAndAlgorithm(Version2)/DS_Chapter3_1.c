@@ -18,7 +18,7 @@ typedef struct
     int last;
 } SeqStack;
 
-SeqStack* InitSeqList();                 // 初始化顺序表
+SeqStack* InitSeqList();                // 初始化顺序表
 void PushElement(SeqStack *L, datatype x); // 将元素入栈
 datatype PopElement(SeqStack *L);               // 将元素出栈
 void PrintElements(SeqStack *L);         // 输出所有元素
@@ -26,14 +26,12 @@ int IsPalindrome(const datatype arr[]);           // 是否是回文
 
 int main()
 {
-    datatype ch;
-    int i;
     datatype arr[MAXSIZE];
 
     printf("\nPlease input the string：");
     scanf("%s", arr);
 
-    printf(IsPalindrome(arr) ? "是回文\n" : "不是回文\n");
+    printf(IsPalindromeUsePoint(arr) ? "是回文\n" : "不是回文\n");
 
     return 0;
 }
@@ -51,7 +49,6 @@ SeqStack* InitSeqList()
 /* 将元素入栈 */
 void PushElement(SeqStack *L, datatype x)
 {
-    int index;
     if(L->last == MAXSIZE - 1)
     {
         printf("数组元素已满！");
@@ -66,6 +63,7 @@ void PushElement(SeqStack *L, datatype x)
 /* 将元素出栈 */
 datatype PopElement(SeqStack *L)
 {
+    assert(L->last != -1);  // 栈已空
     return L->A[L->last--];
 }
 
@@ -81,7 +79,7 @@ void PrintElements(SeqStack *L)
 }
 
 
-/* 判断是否是回文 */
+/* 判断是否是回文，借用栈 */
 int IsPalindrome(const datatype arr[])
 {
     int i;
@@ -96,7 +94,18 @@ int IsPalindrome(const datatype arr[])
     for(i = 0; arr[i] != '@'; i++)
     {
         if(PopElement(p) != arr[i])
-			return 0;  // 不是回文
+            return 0;  // 不是回文
     }
     return 1;  // 是回文
+}
+
+/* 判断是否是回文，借用指针 */
+int IsPalindromeUsePoint(const char* str)
+{
+    const char* start = str;
+    const char* end = str;
+    while(*end != '@')  end++;
+    for(--end; (start < end) && (*start == *end); --end, ++start)
+        ;
+    return start < end ? 0 : 1;
 }
