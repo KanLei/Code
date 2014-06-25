@@ -14,7 +14,7 @@ typedef struct
 {
     datatype data[MAXSIZE];
     int front, rear;
-}CSeQueue;
+} CSeQueue;
 
 
 CSeQueue* InitSeQueue(); /* 初始化循环队列 */
@@ -39,12 +39,12 @@ int main()
     }
     while(1);
     //PrintElement(q);
-	OutQueue(q,&num);
-	printf("%d ",num);
-	OutQueue(q,&num);
-	printf("%d ",num);
-	OutQueue(q,&num);
-	printf("%d ",num);
+    OutQueue(q, &num);
+    printf("%d ", num);
+    OutQueue(q, &num);
+    printf("%d ", num);
+    OutQueue(q, &num);
+    printf("%d ", num);
     return 0;
 }
 
@@ -54,20 +54,22 @@ CSeQueue* InitSeQueue()
     CSeQueue *q = malloc(sizeof(CSeQueue));
     assert(q != NULL);
     q->front = q->rear = -1;
+
     return q;
 }
 
 /* 入队 */
 int InQueue(CSeQueue *q, datatype x)
 {
-    if(((q->rear + 1) % MAXSIZE) == q->front)
+    q->rear = (q->rear + 1) % MAXSIZE;
+    if(q->rear == q->front)
     {
         printf("队列已满！");
         return 0;
     }
     else
     {
-        q->data[(++q->rear) % MAXSIZE] = x;
+        q->data[q->rear] = x;
         return 1;
     }
 }
@@ -94,5 +96,5 @@ void PrintElement(CSeQueue *q)
     {
         printf("%d ", q->data[(++q->front) % MAXSIZE]);
     }
-	printf("%d ", q->data[(++q->front) % MAXSIZE]);
+    printf("%d ", q->data[(++q->front) % MAXSIZE]);
 }
