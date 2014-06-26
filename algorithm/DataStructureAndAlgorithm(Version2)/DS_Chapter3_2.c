@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#define MAXSIZE 10
+#define MAXSIZE 5
 typedef int datatype;
 
 typedef struct
@@ -38,13 +38,13 @@ int main()
         }
     }
     while(1);
-    //PrintElement(q);
-    OutQueue(q, &num);
-    printf("%d ", num);
-    OutQueue(q, &num);
-    printf("%d ", num);
-    OutQueue(q, &num);
-    printf("%d ", num);
+
+    // 出队
+    while(OutQueue(q, &num) == 1)
+	{
+		printf("%d ", num);
+	}
+
     return 0;
 }
 
@@ -53,7 +53,9 @@ CSeQueue* InitSeQueue()
 {
     CSeQueue *q = malloc(sizeof(CSeQueue));
     assert(q != NULL);
-    q->front = q->rear = -1;
+
+    /* 这里赋值为0是为了判断队列是否为满 */
+    q->front = q->rear = 0;
 
     return q;
 }
@@ -61,14 +63,15 @@ CSeQueue* InitSeQueue()
 /* 入队 */
 int InQueue(CSeQueue *q, datatype x)
 {
-    q->rear = (q->rear + 1) % MAXSIZE;
-    if(q->rear == q->front)
+
+    if((q->rear + 1) % MAXSIZE == q->front)
     {
-        printf("队列已满！");
+        printf("队列已满！\n");
         return 0;
     }
     else
     {
+    	q->rear = (q->rear + 1) % MAXSIZE;
         q->data[q->rear] = x;
         return 1;
     }

@@ -29,7 +29,7 @@ SeqList* InitSeqList();
 void PushElement(SeqList *Q, LinkList L); // 将元素入栈
 datatype PopElement(SeqList *Q);               // 将元素出栈
 void PrintElements(LinkList L);         // 输出所有元素
-int ReverseLinkList(SeqList *Q);
+int ReverseLinkList(SeqList *Q, LinkList result);
 
 
 int main()
@@ -39,6 +39,7 @@ int main()
     char ch;
     Node *node;
     LinkList rear;
+    LinkList result = InitLinkList();
 
     // 建立头结点
     LinkList p = InitLinkList();
@@ -55,7 +56,8 @@ int main()
     }
 
     PushElement(Q , p);
-    ReverseLinkList(Q);
+    ReverseLinkList(Q, result);
+	PrintElements(result);
 
     return 0;
 }
@@ -63,9 +65,9 @@ int main()
 /* 初始化链表 */
 LinkList InitLinkList()
 {
-    LinkList p = malloc(sizeof(LinkList));   //  为 SeqList 分配内存空间
-    assert(p != NULL);                      //  判断是否成功申请到内存空间
-    p->next = NULL;                           //  将 last 值初始化为 -1
+    LinkList p = malloc(sizeof(Node));  	 //  为 LinkList 分配内存空间
+    assert(p != NULL);                       //  判断是否成功申请到内存空间
+    p->next = NULL;                          //  将 next 指针初始化为 NULL
     return p;
 }
 
@@ -80,16 +82,17 @@ SeqList* InitSeqList()
 /* 将元素入栈 */
 void PushElement(SeqList *Q, LinkList L)
 {
-    while(L->next != NULL)
+	Node* p = L->next;
+    while(p != NULL)
     {
         if(Q->last == MAXSIZE - 1)
         {
-            printf("数组元素已满！");
+            printf("栈已满！\n");
         }
         else
         {
-            Q->A[++Q->last] = L->data;  // 将 x 插入
-            L = L->next;
+            Q->A[++Q->last] = p->data;  // 将 x 插入
+            p = p->next;
         }
     }
 }
@@ -107,24 +110,21 @@ datatype PopElement(SeqList *Q)
 /*  输出链表中所有元素 */
 void PrintElements(LinkList L)
 {
-    int i;
-    while(L->next != NULL)
+	Node* p = L->next;
+    while(NULL != p)
     {
-        printf("%c", L->data);
-        L = L->next;
+        printf("%c", p->data);
+        p = p->next;
     }
     printf("\n");
 }
 
 
 /* 出栈并构造新的链表 */
-int ReverseLinkList(SeqList *Q)
+int ReverseLinkList(SeqList *Q, LinkList result)
 {
     char ch;
-    LinkList rear;
-    // 建立头结点
-    LinkList p = InitLinkList();
-    rear = p;
+    Node *rear  = result;
 
     // 构建单链表
     while((ch = PopElement(Q)) != '@')
@@ -135,6 +135,6 @@ int ReverseLinkList(SeqList *Q)
         rear->next = node;
         rear = rear->next;
     }
-    PrintElements(p);
+
     return 1;
 }

@@ -1,5 +1,8 @@
 /*
     设计一个算法判别一个算数表达式的圆括号是否正确配对。
+
+    思路：遇到左括号'('入栈，遇到右括号')'出栈，如果栈中元素不足或多于则不匹配，反之，则匹配。
+    注：不可全部将左括号入栈后，然后全部出栈，因为无法避免情况：) (
 */
 
 #include <stdio.h>
@@ -92,21 +95,20 @@ int IsParenthesisMatch(const datatype arr[])
     for(i = 0; arr[i] != '\0'; i++)
     {
         if(arr[i] == '(')
-            PushElement(p, arr[i]);    // 将元素入栈
+            PushElement(p, arr[i]);    // 将左括号入栈
+        else if(arr[i] == ')' && PopElement(p) != '(')  // 将右括号出栈
+            return 0;
     }
 
+    /* 以下代码已被上移 */
     // 将元素出栈，并与字符串进行比较
-    for(i = 0; arr[i] != '\0'; i++)
+    /*for(i = 0; arr[i] != '\0'; i++)
     {
         if(arr[i] == ')')
-            if(PopElement(p) != '(')
+            if(PopElement(p) != '(')  // 将右括号出栈
                 return 0;
-    }
+    }*/
 
     // 判读栈中是否还存在左括号
-    if(PopElement(p) != '@')
-	{
-		return 0;  // 不匹配
-	}
-    return 1;  // 匹配
+    return PopElement(p) == '(' ? 0 : 1;
 }
