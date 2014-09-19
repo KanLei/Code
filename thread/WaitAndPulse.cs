@@ -27,7 +27,7 @@ namespace WaitAndPulse
             {
                 _go = true;
                 Monitor.Pulse(_locker);
-            }
+            }  // 退出后被其它线程再次锁定
         }
 
         static void Work()
