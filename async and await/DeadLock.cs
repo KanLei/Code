@@ -15,7 +15,7 @@ class DeadLockDemo
 {
     public static async Task DelayAsync()
     {
-        await Task.Delay(1000);
+        await Task.Delay(1000).ConfigureAwait(false);
     }
 
     public static void Test()
@@ -25,3 +25,30 @@ class DeadLockDemo
     }
 }
 
+
+/*
+ * 解决方案是使用 .ConfigureAwait(false) 指定不捕获当前上下文，
+ * 使用线程池线程执行后续操作
+ */
+
+class DeadLockDemo
+{
+    public static async Task DelayAsync()
+    {
+        await Task.Delay(1000).ConfigureAwait(false);  // change
+    }
+
+    public static void Test()
+    {
+        DelayAsync().Wait();
+    }
+}
+
+/*
+ * Summary:
+ * You must apply .ConfigureAwait(false) to every Task you await!
+ * When you use a library. (because some tasks may complete synchronously)
+ * But when you use an Application, maybe you will use .ConfigureAwait(true)
+ * 
+ * Also, ignoring SynchronizationContext improves performance
+ */
